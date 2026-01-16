@@ -1,0 +1,33 @@
+// App.scss
+.container {
+  text-align: center;
+  margin-bottom: 50px;
+
+  .btn {
+    padding: 15px 40px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 0 10px;       // Расстояние между кнопками
+    color: white;         // Текст у всех белый
+    transition: transform 0.2s; // Плавная анимация для всех
+
+    &:active {
+      transform: scale(0.95); // Чуть уменьшается при клике
+    }
+
+      &.blue {
+        background-color: #3498db;
+      }
+      
+      &.green {
+        background-color: #42db34;
+      }
+
+      &.red {
+        background-color: #f30f39;
+      }
+  }
+}

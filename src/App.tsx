@@ -1,32 +1,60 @@
-import React from "react";
+// App.ts
+import { useState } from "react";
+import "./App.scss";
+
 
 const App: React.FC = () => {
-  const sendValue = async () => {
+
+  const sendData = async (code: number) => {
     try {
-      const response = await fetch("http://localhost:3001/send", {
+      const responce = await fetch("http://localhost:3001/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({}),
-      });
-      const text = await response.text();
-      //alert(text); // покажет результат
-    } catch (err) {
-      console.error(err);
-      alert("Ошибка при отправке");
+        body: JSON.stringify({ command: code }),
+      })
+    
+      if (responce.ok) {
+        console.log(`Код ${code} отправлен`);
+      }
+    }
+    catch(err) {
+      console.log(err);
+      alert("Сервер не отвечает");
     }
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
+    <div className="container">
       <h1>UART Test</h1>
       <button
-        onClick={sendValue}
-        style={{ fontSize: "18px", padding: "10px 20px", marginTop: "20px" }}
+        className="btn blue"
+        onClick={() => {
+          sendData(0x01);
+        }}
       >
-        Отправить число
+        Синий
+      </button>
+
+      <button
+        className="btn green"
+        onClick={() => {
+          sendData(0x02);
+        }}
+      >
+        Зелёный
+      </button>
+
+      <button
+        className="btn red"
+        onClick={() => {
+          sendData(0x03);
+        }}
+      >
+        Красный
       </button>
     </div>
   );
 };
 
-export default App
+export default App;
+

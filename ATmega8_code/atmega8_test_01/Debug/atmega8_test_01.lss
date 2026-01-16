@@ -1,0 +1,232 @@
+
+atmega8_test_01.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000000b6  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  0000012a  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          00000001  00800060  00800060  0000012a  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  0000012a  2**0
+                  CONTENTS, READONLY
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  0000015c  2**2
+                  CONTENTS, READONLY
+  5 .debug_aranges 00000068  00000000  00000000  00000198  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   00000686  00000000  00000000  00000200  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 00000511  00000000  00000000  00000886  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   0000028e  00000000  00000000  00000d97  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_frame  000000b4  00000000  00000000  00001028  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    000003e6  00000000  00000000  000010dc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000058  00000000  00000000  000014c2  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	12 c0       	rjmp	.+36     	; 0x26 <__ctors_end>
+   2:	21 c0       	rjmp	.+66     	; 0x46 <__bad_interrupt>
+   4:	20 c0       	rjmp	.+64     	; 0x46 <__bad_interrupt>
+   6:	1f c0       	rjmp	.+62     	; 0x46 <__bad_interrupt>
+   8:	1e c0       	rjmp	.+60     	; 0x46 <__bad_interrupt>
+   a:	1d c0       	rjmp	.+58     	; 0x46 <__bad_interrupt>
+   c:	1c c0       	rjmp	.+56     	; 0x46 <__bad_interrupt>
+   e:	1b c0       	rjmp	.+54     	; 0x46 <__bad_interrupt>
+  10:	1a c0       	rjmp	.+52     	; 0x46 <__bad_interrupt>
+  12:	19 c0       	rjmp	.+50     	; 0x46 <__bad_interrupt>
+  14:	18 c0       	rjmp	.+48     	; 0x46 <__bad_interrupt>
+  16:	17 c0       	rjmp	.+46     	; 0x46 <__bad_interrupt>
+  18:	16 c0       	rjmp	.+44     	; 0x46 <__bad_interrupt>
+  1a:	15 c0       	rjmp	.+42     	; 0x46 <__bad_interrupt>
+  1c:	14 c0       	rjmp	.+40     	; 0x46 <__bad_interrupt>
+  1e:	13 c0       	rjmp	.+38     	; 0x46 <__bad_interrupt>
+  20:	12 c0       	rjmp	.+36     	; 0x46 <__bad_interrupt>
+  22:	11 c0       	rjmp	.+34     	; 0x46 <__bad_interrupt>
+  24:	10 c0       	rjmp	.+32     	; 0x46 <__bad_interrupt>
+
+00000026 <__ctors_end>:
+  26:	11 24       	eor	r1, r1
+  28:	1f be       	out	0x3f, r1	; 63
+  2a:	cf e5       	ldi	r28, 0x5F	; 95
+  2c:	d4 e0       	ldi	r29, 0x04	; 4
+  2e:	de bf       	out	0x3e, r29	; 62
+  30:	cd bf       	out	0x3d, r28	; 61
+
+00000032 <__do_clear_bss>:
+  32:	20 e0       	ldi	r18, 0x00	; 0
+  34:	a0 e6       	ldi	r26, 0x60	; 96
+  36:	b0 e0       	ldi	r27, 0x00	; 0
+  38:	01 c0       	rjmp	.+2      	; 0x3c <.do_clear_bss_start>
+
+0000003a <.do_clear_bss_loop>:
+  3a:	1d 92       	st	X+, r1
+
+0000003c <.do_clear_bss_start>:
+  3c:	a1 36       	cpi	r26, 0x61	; 97
+  3e:	b2 07       	cpc	r27, r18
+  40:	e1 f7       	brne	.-8      	; 0x3a <.do_clear_bss_loop>
+  42:	2e d0       	rcall	.+92     	; 0xa0 <main>
+  44:	36 c0       	rjmp	.+108    	; 0xb2 <_exit>
+
+00000046 <__bad_interrupt>:
+  46:	dc cf       	rjmp	.-72     	; 0x0 <__vectors>
+
+00000048 <_Z9uart_initv>:
+#define BAUD 9600
+#define MYUBRR (F_CPU/16/BAUD-1)
+
+void uart_init() {
+	unsigned int ubrr = MYUBRR;
+	UBRRH = (unsigned char)(ubrr>>8);
+  48:	10 bc       	out	0x20, r1	; 32
+	UBRRL = (unsigned char)ubrr;
+  4a:	83 e3       	ldi	r24, 0x33	; 51
+  4c:	89 b9       	out	0x09, r24	; 9
+
+	UCSRB = (1<<RXEN) | (1<<TXEN); // включаем прием и передачу
+  4e:	88 e1       	ldi	r24, 0x18	; 24
+  50:	8a b9       	out	0x0a, r24	; 10
+	UCSRC = (1<<URSEL) | (1<<UCSZ1) | (1<<UCSZ0); // 8 бит данных, 1 стоп-бит
+  52:	86 e8       	ldi	r24, 0x86	; 134
+  54:	80 bd       	out	0x20, r24	; 32
+  56:	08 95       	ret
+
+00000058 <_Z12uart_receivev>:
+}
+
+unsigned char uart_receive() {
+	while (!(UCSRA & (1<<RXC))); // ждём, пока байт придёт
+  58:	5f 9b       	sbis	0x0b, 7	; 11
+  5a:	fe cf       	rjmp	.-4      	; 0x58 <_Z12uart_receivev>
+	return UDR;
+  5c:	8c b1       	in	r24, 0x0c	; 12
+}
+  5e:	08 95       	ret
+
+00000060 <_Z8onPinPC0v>:
+		break;
+	}
+}
+
+void onPinPC0() {
+	PORTC |= (1 << PC0);
+  60:	a8 9a       	sbi	0x15, 0	; 21
+  62:	08 95       	ret
+
+00000064 <_Z8onPinPC1v>:
+}
+
+void onPinPC1() {
+	PORTC |= (1 << PC1);
+  64:	a9 9a       	sbi	0x15, 1	; 21
+  66:	08 95       	ret
+
+00000068 <_Z8onPinPC2v>:
+}
+
+void onPinPC2() {
+	PORTC |= (1 << PC2);
+  68:	aa 9a       	sbi	0x15, 2	; 21
+  6a:	08 95       	ret
+
+0000006c <_Z9offPinPC0v>:
+}
+
+void offPinPC0() {
+	PORTC &= ~(1 << PC0);
+  6c:	a8 98       	cbi	0x15, 0	; 21
+  6e:	08 95       	ret
+
+00000070 <_Z9offPinPC1v>:
+}
+
+void offPinPC1() {
+	PORTC &= ~(1 << PC1);
+  70:	a9 98       	cbi	0x15, 1	; 21
+  72:	08 95       	ret
+
+00000074 <_Z9offPinPC2v>:
+}
+
+void offPinPC2() {
+	PORTC &= ~(1 << PC2);
+  74:	aa 98       	cbi	0x15, 2	; 21
+  76:	08 95       	ret
+
+00000078 <_Z15checkStatusCodev>:
+		checkStatusCode();
+	}
+}
+
+void checkStatusCode() {
+	switch(receiveData) {
+  78:	80 91 60 00 	lds	r24, 0x0060	; 0x800060 <_edata>
+  7c:	82 30       	cpi	r24, 0x02	; 2
+  7e:	41 f0       	breq	.+16     	; 0x90 <_Z15checkStatusCodev+0x18>
+  80:	83 30       	cpi	r24, 0x03	; 3
+  82:	51 f0       	breq	.+20     	; 0x98 <_Z15checkStatusCodev+0x20>
+  84:	81 30       	cpi	r24, 0x01	; 1
+  86:	59 f4       	brne	.+22     	; 0x9e <_Z15checkStatusCodev+0x26>
+	case 0x01:
+		onPinPC0();
+  88:	eb df       	rcall	.-42     	; 0x60 <_Z8onPinPC0v>
+		offPinPC1();
+  8a:	f2 df       	rcall	.-28     	; 0x70 <_Z9offPinPC1v>
+		offPinPC2();
+  8c:	f3 df       	rcall	.-26     	; 0x74 <_Z9offPinPC2v>
+		break;
+  8e:	08 95       	ret
+	case 0x02:
+		onPinPC1();
+  90:	e9 df       	rcall	.-46     	; 0x64 <_Z8onPinPC1v>
+		offPinPC0();
+  92:	ec df       	rcall	.-40     	; 0x6c <_Z9offPinPC0v>
+		offPinPC2();
+  94:	ef df       	rcall	.-34     	; 0x74 <_Z9offPinPC2v>
+		break;
+  96:	08 95       	ret
+	case 0x03:
+		onPinPC2();
+  98:	e7 df       	rcall	.-50     	; 0x68 <_Z8onPinPC2v>
+		offPinPC0();
+  9a:	e8 df       	rcall	.-48     	; 0x6c <_Z9offPinPC0v>
+		offPinPC1();;
+  9c:	e9 df       	rcall	.-46     	; 0x70 <_Z9offPinPC1v>
+  9e:	08 95       	ret
+
+000000a0 <main>:
+void offPinPC2();
+
+unsigned char receiveData;
+
+int main(void) {
+	DDRC |= (1 << PC0) | (1 << PC1) | (1 << PC2); // порты PC0, PC1, PC2 на выход
+  a0:	84 b3       	in	r24, 0x14	; 20
+  a2:	87 60       	ori	r24, 0x07	; 7
+  a4:	84 bb       	out	0x14, r24	; 20
+	//PORTC |= (1 << PC0) | (1 << PC1) | (1 << PC2); // логичсекая 1 на порты PC0, PC1, PC2
+	
+	uart_init();
+  a6:	d0 df       	rcall	.-96     	; 0x48 <_Z9uart_initv>
+	
+	while (1) {
+		receiveData = uart_receive();
+  a8:	d7 df       	rcall	.-82     	; 0x58 <_Z12uart_receivev>
+  aa:	80 93 60 00 	sts	0x0060, r24	; 0x800060 <_edata>
+		
+		checkStatusCode();
+  ae:	e4 df       	rcall	.-56     	; 0x78 <_Z15checkStatusCodev>
+  b0:	fb cf       	rjmp	.-10     	; 0xa8 <main+0x8>
+
+000000b2 <_exit>:
+  b2:	f8 94       	cli
+
+000000b4 <__stop_program>:
+  b4:	ff cf       	rjmp	.-2      	; 0xb4 <__stop_program>
